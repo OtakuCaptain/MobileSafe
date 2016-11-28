@@ -10,7 +10,6 @@ public class StreamUtil {
      * @return 流转换成的字符串      返回null代表异常
      */
     public static String streamToString(InputStream inputStream) {
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
 
@@ -30,9 +29,6 @@ public class StreamUtil {
                 e.printStackTrace();
             }
         }
-
         return null;
-
     }
-
 }
