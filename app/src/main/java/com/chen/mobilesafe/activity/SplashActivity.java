@@ -1,5 +1,8 @@
 package com.chen.mobilesafe.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chen.activity.R;
 import com.chen.mobilesafe.utils.StreamUtil;
+import com.chen.mobilesafe.utils.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +53,8 @@ public class SplashActivity extends AppCompatActivity {
 
     private TextView tv_version_name;
     private int mLocalVersionCode;
+    private Context mContext;
+    private String mVersionDes;
 
     private Handler mHandler = new Handler() {
 
@@ -56,25 +63,57 @@ public class SplashActivity extends AppCompatActivity {
 
             switch (msg.what) {
                 case UPDATE_VERSION:
+                    showUpdateDialog();
                     break;
                 case ENTER_HOME:
                     enterHome();
                     break;
                 case URL_ERROR:
+                    ToastUtil.show(mContext,"url异常");
+                    enterHome();
                     break;
                 case IO_ERROR:
+                    ToastUtil.show(mContext,"读取异常");
+                    enterHome();
                     break;
                 case JSON_ERROR:
+                    ToastUtil.show(mContext,"json解析异常");
+                    enterHome();
                     break;
             }
         }
     };
 
 
+    private void showUpdateDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("更新提示");
+        builder.setMessage(mVersionDes);
+        builder.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                enterHome();
+            }
+        });
+
+
+        builder.show();
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mContext=this;
 
 //        初始化UI
         initUI();
@@ -108,6 +147,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
                 Message msg = Message.obtain();
+                long startTime = System.currentTimeMillis();
                 try {
                     //封装URL地址
                     URL url = new URL("http://192.168.0.118:8080/mobilesafe.json");
@@ -131,12 +171,12 @@ public class SplashActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(json);
 
                         String versionName = jsonObject.getString("versionName");
-                        String versionDes = jsonObject.getString("versionDes");
+                        mVersionDes = jsonObject.getString("versionDes");
                         String versionCode = jsonObject.getString("versionCode");
                         String downloadUrl = jsonObject.getString("downloadUrl");
 
                         Log.i(tag, versionName);
-                        Log.i(tag, versionDes);
+                        Log.i(tag, mVersionDes);
                         Log.i(tag, versionCode);
                         Log.i(tag, downloadUrl);
 
@@ -162,6 +202,18 @@ public class SplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                     msg.what = JSON_ERROR;
                 } finally {
+
+                    //指定睡眠时间4s，网络请求超4s则不做处理
+                    //网络请求不超过4s则补足4s
+
+                    long endTime = System.currentTimeMillis();
+                    if(endTime-startTime<4000){
+                        try {
+                            Thread.sleep(4000-(endTime-startTime));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     mHandler.sendMessage(msg);
                 }
             }
