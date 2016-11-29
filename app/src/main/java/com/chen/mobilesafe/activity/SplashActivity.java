@@ -1,5 +1,6 @@
 package com.chen.mobilesafe.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -32,17 +33,43 @@ public class SplashActivity extends AppCompatActivity {
      * 直接进入主界面状态码
      */
     private static final int ENTER_HOME = 101;
+    /**
+     * 网址错误状态码
+     */
+    private static final int URL_ERROR = 102;
+    /**
+     * IO错误状态码
+     */
+    private static final int IO_ERROR = 103;
+    /**
+     * JSON错误状态码
+     */
+    private static final int JSON_ERROR = 104;
 
     private TextView tv_version_name;
     private int mLocalVersionCode;
 
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case UPDATE_VERSION:
+                    break;
+                case ENTER_HOME:
+                    enterHome();
+                    break;
+                case URL_ERROR:
+                    break;
+                case IO_ERROR:
+                    break;
+                case JSON_ERROR:
+                    break;
+            }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +82,14 @@ public class SplashActivity extends AppCompatActivity {
         initData();
     }
 
+    private void enterHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     /**
-     *
+     * 初始化数据
      */
     private void initData() {
         //应用版本名称
@@ -109,20 +142,27 @@ public class SplashActivity extends AppCompatActivity {
 
                         if (mLocalVersionCode < Integer.parseInt(versionCode)) {
                             //提示用户更新
-                            msg.what=UPDATE_VERSION;
+                            msg.what = UPDATE_VERSION;
 
                         } else {
                             //进入主界面
-                            msg.what=ENTER_HOME;
+                            msg.what = ENTER_HOME;
 
                         }
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
+                    msg.what = URL_ERROR;
+
                 } catch (IOException e) {
                     e.printStackTrace();
+                    msg.what = IO_ERROR;
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    msg.what = JSON_ERROR;
+                } finally {
+                    mHandler.sendMessage(msg);
                 }
             }
         }.start();
