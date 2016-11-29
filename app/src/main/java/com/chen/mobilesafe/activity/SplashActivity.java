@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +19,15 @@ import android.widget.Toast;
 import com.chen.activity.R;
 import com.chen.mobilesafe.utils.StreamUtil;
 import com.chen.mobilesafe.utils.ToastUtil;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -55,6 +62,7 @@ public class SplashActivity extends AppCompatActivity {
     private int mLocalVersionCode;
     private Context mContext;
     private String mVersionDes;
+    private String mDownloadUrl;
 
     private Handler mHandler = new Handler() {
 
@@ -69,15 +77,15 @@ public class SplashActivity extends AppCompatActivity {
                     enterHome();
                     break;
                 case URL_ERROR:
-                    ToastUtil.show(mContext,"url异常");
+                    ToastUtil.show(mContext, "url异常");
                     enterHome();
                     break;
                 case IO_ERROR:
-                    ToastUtil.show(mContext,"读取异常");
+                    ToastUtil.show(mContext, "读取异常");
                     enterHome();
                     break;
                 case JSON_ERROR:
-                    ToastUtil.show(mContext,"json解析异常");
+                    ToastUtil.show(mContext, "json解析异常");
                     enterHome();
                     break;
             }
@@ -93,7 +101,7 @@ public class SplashActivity extends AppCompatActivity {
         builder.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                downloadApk();
             }
         });
         builder.setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
@@ -103,17 +111,85 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
-
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                //用户点击返回键，也能进入主界面
+                enterHome();
+                dialog.dismiss();
+            }
+        });
         builder.show();
-
     }
 
+    protected void downloadApk() {
+        //apk地址，放置apk路径
+
+        //判断sd卡是否可用
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    File.separator + "mobilesafe.apk";
+            //发送请求，获取apk
+            HttpUtils httpUtils = new HttpUtils();
+            httpUtils.download(mDownloadUrl, path, new RequestCallBack<File>() {
+                @Override
+                public void onSuccess(ResponseInfo<File> responseInfo) {
+
+                    File file = responseInfo.result;
+                    Log.i(tag, "下载成功");
+                    installApk(file);
+                }
+
+                @Override
+                public void onFailure(HttpException e, String s) {
+
+                    Log.i(tag, "下载失败");
+                }
+
+                @Override
+                public void onStart() {
+                    Log.i(tag, "开始下载");
+                    super.onStart();
+                }
+
+                //下载进程
+                @Override
+                public void onLoading(long total, long current, boolean isUploading) {
+                    Log.i(tag, "下载中。。。");
+                    Log.i(tag, "total" + total);
+                    Log.i(tag, "current" + current);
+                    super.onLoading(total, current, isUploading);
+                }
+            });
+
+        }
+    }
+
+
+    /**
+     * 安装对应Apk
+     *
+     * @param file 安装文件
+     */
+    protected void installApk(File file) {
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+//        startActivity(intent);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        enterHome();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        mContext=this;
+        mContext = this;
 
 //        初始化UI
         initUI();
@@ -150,7 +226,7 @@ public class SplashActivity extends AppCompatActivity {
                 long startTime = System.currentTimeMillis();
                 try {
                     //封装URL地址
-                    URL url = new URL("http://192.168.0.118:8080/mobilesafe.json");
+                    URL url = new URL("http://192.168.2.102:8080/mobilesafe.json");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                     //设置请求头
@@ -173,12 +249,12 @@ public class SplashActivity extends AppCompatActivity {
                         String versionName = jsonObject.getString("versionName");
                         mVersionDes = jsonObject.getString("versionDes");
                         String versionCode = jsonObject.getString("versionCode");
-                        String downloadUrl = jsonObject.getString("downloadUrl");
+                        mDownloadUrl = jsonObject.getString("downloadUrl");
 
                         Log.i(tag, versionName);
                         Log.i(tag, mVersionDes);
                         Log.i(tag, versionCode);
-                        Log.i(tag, downloadUrl);
+                        Log.i(tag, mDownloadUrl);
 
                         if (mLocalVersionCode < Integer.parseInt(versionCode)) {
                             //提示用户更新
@@ -207,9 +283,9 @@ public class SplashActivity extends AppCompatActivity {
                     //网络请求不超过4s则补足4s
 
                     long endTime = System.currentTimeMillis();
-                    if(endTime-startTime<4000){
+                    if (endTime - startTime < 4000) {
                         try {
-                            Thread.sleep(4000-(endTime-startTime));
+                            Thread.sleep(4000 - (endTime - startTime));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
