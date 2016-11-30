@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
-        android:text="homeactivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/TitleStyle"
+        android:text="@string/function_list" />
+
+    <!--<TextView-->
+    <!--android:padding="5dp"-->
+    <!--android:maxLines="1"-->
+    <!--android:text="啊,五环,你比四环多一环!啊,五环,你比六环少一环!-->
+    <!--终于有一天,你会修到七环,修到七环怎么办,你比五环多两环!"-->
+    <!--android:ellipsize="marquee"-->
+    <!--android:marqueeRepeatLimit="marquee_forever"-->
+    <!--android:focusable="true"-->
+    <!--android:focusableInTouchMode="true"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content" />-->
+    <com.chen.mobilesafe.view.FocusTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="啊,五环,你比四环多一环!啊,五环,你比六环少一环!
+        终于有一天,你会修到七环,修到七环怎么办,你比五环多两环!" />
+    <!--android:maxLines="1"跑马灯无效-->
 
 </LinearLayout>

@@ -13,8 +13,10 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chen.activity.R;
 import com.chen.mobilesafe.utils.StreamUtil;
@@ -63,6 +65,7 @@ public class SplashActivity extends AppCompatActivity {
     private Context mContext;
     private String mVersionDes;
     private String mDownloadUrl;
+    private RelativeLayout rl_root;
 
     private Handler mHandler = new Handler() {
 
@@ -91,6 +94,20 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        mContext = this;
+
+//        初始化UI
+        initUI();
+//       初始化数据
+        initData();
+        //初始化动画
+        initAnimation();
+    }
 
 
     private void showUpdateDialog() {
@@ -185,16 +202,17 @@ public class SplashActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        mContext = this;
 
-//        初始化UI
-        initUI();
-//       初始化数据
-        initData();
+
+    /**
+     * 添加淡入动画
+     */
+    private void initAnimation() {
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0,1);
+        alphaAnimation.setDuration(3000);
+        rl_root.startAnimation(alphaAnimation);
+
+
     }
 
     private void enterHome() {
@@ -333,6 +351,7 @@ public class SplashActivity extends AppCompatActivity {
      */
     private void initUI() {
         tv_version_name = (TextView) findViewById(R.id.tv_version_name);
+        rl_root = (RelativeLayout) findViewById(R.id.rl_root);
     }
 
 
