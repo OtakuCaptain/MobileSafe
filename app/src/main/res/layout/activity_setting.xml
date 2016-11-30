@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <!--<RelativeLayout-->
@@ -41,10 +42,17 @@
         android:text="设置中心" />
 
     <com.chen.mobilesafe.view.SettingItemView
+        app:destitle="自动更新设置"
+        app:deson="自动更新已开启"
+        app:desoff="自动更新已关闭"
+        android:id="@+id/siv_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <com.chen.mobilesafe.view.SettingItemView
+        app:destitle=""
+        app:deson=""
+        app:desoff=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chen.activity.R;
+import com.chen.mobilesafe.utils.ConstantValue;
+import com.chen.mobilesafe.utils.SpUtil;
 import com.chen.mobilesafe.utils.StreamUtil;
 import com.chen.mobilesafe.utils.ToastUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -228,13 +230,22 @@ public class SplashActivity extends AppCompatActivity {
         tv_version_name.setText(getVersionName());
 //        获取本地版本号
         mLocalVersionCode = getVersionCode();
-        checkCode();
+
+        if(SpUtil.getBoolean(this, ConstantValue.OPEN_UPDATE,false)){
+            checkVersion();
+        }else {
+            //消息机制
+            //在发送消息4s后去处理状态码所对应消息
+            mHandler.sendEmptyMessageDelayed(ENTER_HOME,4000);
+        }
+
+
     }
 
     /**
      * 检测版本号
      */
-    private void checkCode() {
+    private void checkVersion() {
 
         new Thread() {
             public void run() {
