@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.chen.mobilesafe.activity.HomeActivity"/>
+        <activity android:name="com.chen.mobilesafe.activity.SettingActivity"/>
 
     </application>
 
