@@ -30,4 +30,10 @@
         终于有一天,你会修到七环,修到七环怎么办,你比五环多两环!" />
     <!--android:maxLines="1"跑马灯无效-->
 
+    <GridView
+        android:verticalSpacing="10dp"
+        android:id="@+id/gv_home"
+        android:numColumns="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>
