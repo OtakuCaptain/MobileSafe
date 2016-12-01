@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import com.chen.activity.R;
 import com.chen.mobilesafe.utils.ConstantValue;
 import com.chen.mobilesafe.utils.SpUtil;
+import com.chen.mobilesafe.utils.ToastUtil;
 
 public class HomeActivity extends Activity {
 
@@ -30,7 +33,7 @@ public class HomeActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mContext=this;
+        mContext = this;
 
         //初始化UI
         initUI();
@@ -69,13 +72,13 @@ public class HomeActivity extends Activity {
     private void showDialog() {
         //判断本地是否有密码
         String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
-        if(TextUtils.isEmpty(psd)){
+        if (TextUtils.isEmpty(psd)) {
             //提示设置密码
             showSetPsdDialog();
-        }else {
+
+        } else {
             //确认密码
             showConfirmPsdDialog();
-
         }
     }
 
@@ -84,6 +87,43 @@ public class HomeActivity extends Activity {
      */
     private void showConfirmPsdDialog() {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog dialog = builder.create();
+        final View view = View.inflate(mContext, R.layout.dialog_confirm_psd, null);
+        dialog.setView(view);
+        dialog.show();
+//findViewById因为是view页面，应该用view.findViewById
+        Button bt_submit = (Button) view.findViewById(R.id.bt_submit);
+        Button bt_cancel = (Button) view.findViewById(R.id.bt_cancel);
+        bt_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText et_confirm_psd = (EditText) view.findViewById(R.id.et_confirm_psd);
+
+                String confirm_psd = et_confirm_psd.getText().toString();
+
+
+                if (TextUtils.isEmpty(confirm_psd)) {
+                    ToastUtil.show(mContext, "请输入密码");
+                } else {
+                    String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
+                    if (confirm_psd.equals(psd)) {
+                        Intent intent = new Intent(mContext, TestActivity.class);
+                        startActivity(intent);
+                        //跳转之后应该关闭对话框
+                        dialog.dismiss();
+                    } else {
+                        ToastUtil.show(mContext, "密码不正确");
+                    }
+                }
+            }
+        });
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     /**
@@ -92,15 +132,50 @@ public class HomeActivity extends Activity {
     private void showSetPsdDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        AlertDialog dialog = builder.create();
-        View view = View.inflate(mContext, R.layout.dialog_set_psd, null);
+        final AlertDialog dialog = builder.create();
+        final View view= View.inflate(mContext, R.layout.dialog_set_psd, null);
         dialog.setView(view);
         dialog.show();
+//findViewById因为是view页面，应该用view.findViewById
+        Button bt_submit = (Button) view.findViewById(R.id.bt_submit);
+        Button bt_cancel = (Button) view.findViewById(R.id.bt_cancel);
+        bt_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText et_set_psd = (EditText) view.findViewById(R.id.et_set_psd);
+                EditText et_confirm_psd = (EditText) view.findViewById(R.id.et_confirm_psd);
+
+                //读取编辑文本框的数据
+                String psd = et_set_psd.getText().toString();
+                String confirm_psd = et_confirm_psd.getText().toString();
+                //确认两次密码是否一致
+                if (TextUtils.isEmpty(psd) || TextUtils.isEmpty(confirm_psd)) {
+                    ToastUtil.show(mContext, "请输入密码");
+                } else {
+                    if (psd.equals(confirm_psd)) {
+                        SpUtil.putString(mContext, ConstantValue.MOBILE_SDAFE_PSD, psd);
+                        Intent intent = new Intent(mContext, TestActivity.class);
+                        startActivity(intent);
+                        //跳转之后应该关闭对话框
+                        dialog.dismiss();
+                    } else {
+                        ToastUtil.show(mContext, "两次密码不一致");
+                    }
+                }
+            }
+        });
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     private void initUI() {
         gv_home = (GridView) findViewById(R.id.gv_home);
     }
+
 
     private class MyAdapter extends BaseAdapter {
         @Override
