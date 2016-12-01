@@ -95,6 +95,7 @@ public class HomeActivity extends Activity {
         AlertDialog dialog = builder.create();
         View view = View.inflate(mContext, R.layout.dialog_set_psd, null);
         dialog.setView(view);
+        dialog.show();
     }
 
     private void initUI() {
