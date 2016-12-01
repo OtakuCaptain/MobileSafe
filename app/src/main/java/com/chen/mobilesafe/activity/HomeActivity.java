@@ -1,8 +1,11 @@
 package com.chen.mobilesafe.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,18 +15,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chen.activity.R;
+import com.chen.mobilesafe.utils.ConstantValue;
+import com.chen.mobilesafe.utils.SpUtil;
 
 public class HomeActivity extends Activity {
 
     private GridView gv_home;
     private String[] mTitleStr;
     private int[] mDrawableIds;
+    private Context mContext;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mContext=this;
 
         //初始化UI
         initUI();
@@ -48,6 +55,7 @@ public class HomeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
+                        showDialog();
                         break;
                     case 8:
                         Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
@@ -56,6 +64,37 @@ public class HomeActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void showDialog() {
+        //判断本地是否有密码
+        String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
+        if(TextUtils.isEmpty(psd)){
+            //提示设置密码
+            showSetPsdDialog();
+        }else {
+            //确认密码
+            showConfirmPsdDialog();
+
+        }
+    }
+
+    /**
+     * 确认密码的对话框
+     */
+    private void showConfirmPsdDialog() {
+
+    }
+
+    /**
+     * 初始设置密码的对话框
+     */
+    private void showSetPsdDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        AlertDialog dialog = builder.create();
+        View view = View.inflate(mContext, R.layout.dialog_set_psd, null);
+        dialog.setView(view);
     }
 
     private void initUI() {

@@ -22,6 +22,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_setting);
 
         mContext=this;
+        //版本更新开关
         initUpdate();
 
     }
