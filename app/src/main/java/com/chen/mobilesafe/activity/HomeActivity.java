@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.chen.activity.R;
 import com.chen.mobilesafe.utils.ConstantValue;
+import com.chen.mobilesafe.utils.Md5Util;
 import com.chen.mobilesafe.utils.SpUtil;
 import com.chen.mobilesafe.utils.ToastUtil;
 
@@ -102,12 +103,11 @@ public class HomeActivity extends Activity {
 
                 String confirm_psd = et_confirm_psd.getText().toString();
 
-
                 if (TextUtils.isEmpty(confirm_psd)) {
                     ToastUtil.show(mContext, "请输入密码");
                 } else {
                     String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
-                    if (confirm_psd.equals(psd)) {
+                    if (Md5Util.encoder(confirm_psd).equals(psd)) {
                         Intent intent = new Intent(mContext, TestActivity.class);
                         startActivity(intent);
                         //跳转之后应该关闭对话框
@@ -158,6 +158,8 @@ public class HomeActivity extends Activity {
                         startActivity(intent);
                         //跳转之后应该关闭对话框
                         dialog.dismiss();
+                        SpUtil.putString(mContext,ConstantValue.MOBILE_SDAFE_PSD, Md5Util.encoder(confirm_psd));
+
                     } else {
                         ToastUtil.show(mContext, "两次密码不一致");
                     }
