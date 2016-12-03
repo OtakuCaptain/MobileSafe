@@ -108,7 +108,7 @@ public class HomeActivity extends Activity {
                 } else {
                     String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
                     if (Md5Util.encoder(confirm_psd).equals(psd)) {
-                        Intent intent = new Intent(mContext, TestActivity.class);
+                        Intent intent = new Intent(mContext, SetupOverActivity.class);
                         startActivity(intent);
                         //跳转之后应该关闭对话框
                         dialog.dismiss();
@@ -154,7 +154,8 @@ public class HomeActivity extends Activity {
                 } else {
                     if (psd.equals(confirm_psd)) {
                         SpUtil.putString(mContext, ConstantValue.MOBILE_SDAFE_PSD, psd);
-                        Intent intent = new Intent(mContext, TestActivity.class);
+//                        Intent intent = new Intent(mContext, TestActivity.class);
+                        Intent intent = new Intent(mContext, SetupOverActivity.class);
                         startActivity(intent);
                         //跳转之后应该关闭对话框
                         dialog.dismiss();

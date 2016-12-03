@@ -10,4 +10,5 @@ public class ConstantValue {
      * 确认密码的key值
      */
     public static final String MOBILE_SDAFE_PSD = "mobile_sdafe_psd";
+    public static final String SETUP_OVER = "setup_over";
 }

@@ -20,6 +20,8 @@
         <activity android:name="com.chen.mobilesafe.activity.HomeActivity"/>
         <activity android:name="com.chen.mobilesafe.activity.SettingActivity"/>
         <activity android:name="com.chen.mobilesafe.activity.TestActivity"/>
+        <activity android:name="com.chen.mobilesafe.activity.SetupOverActivity"/>
+        <activity android:name="com.chen.mobilesafe.activity.Setup1Activity"/>
 
     </application>
 
