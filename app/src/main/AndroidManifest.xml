@@ -24,6 +24,7 @@
         <activity android:name="com.chen.mobilesafe.activity.Setup1Activity"/>
         <activity android:name="com.chen.mobilesafe.activity.Setup2Activity"/>
         <activity android:name="com.chen.mobilesafe.activity.Setup3Activity"/>
+        <activity android:name="com.chen.mobilesafe.activity.Setup4Activity"/>
 
     </application>
 

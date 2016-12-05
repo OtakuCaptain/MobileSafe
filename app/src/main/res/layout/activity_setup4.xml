@@ -2,31 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+<TextView
+    style="@style/TitleStyle"
+    android:text="4恭喜完成设置"/>
 
-    <TextView
-        android:text="3设置安全号码"
-        style="@style/TitleStyle"/>
-
-    <TextView
-        android:layout_margin="10dp"
-        android:textColor="#000"
-        android:text="sim卡变更后/n报警短信会发送给安全号码"
-        android:textSize="18sp"
+    <CheckBox
+        android:text="您没有开启防盗保护"
+        android:id="@+id/cb_box"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:inputType="phone"
-        android:hint="请输入安全号码"
-        android:id="@+id/et_phone_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:background="@drawable/selector_number_btn_bg"
-        android:text="请选择联系人"
-        android:id="@+id/bt_select_number"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <LinearLayout
@@ -39,22 +22,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
+        <ImageView
+            android:background="@android:drawable/presence_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:background="@android:drawable/presence_invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
 
         <ImageView
             android:background="@android:drawable/presence_online"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <ImageView
-            android:background="@android:drawable/presence_invisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <RelativeLayout
