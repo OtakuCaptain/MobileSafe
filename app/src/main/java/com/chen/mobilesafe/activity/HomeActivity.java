@@ -72,7 +72,7 @@ public class HomeActivity extends Activity {
 
     private void showDialog() {
         //判断本地是否有密码
-        String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
+        String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SAFE_PSD, "");
         if (TextUtils.isEmpty(psd)) {
             //提示设置密码
             showSetPsdDialog();
@@ -106,7 +106,7 @@ public class HomeActivity extends Activity {
                 if (TextUtils.isEmpty(confirm_psd)) {
                     ToastUtil.show(mContext, "请输入密码");
                 } else {
-                    String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SDAFE_PSD, "");
+                    String psd = SpUtil.getString(mContext, ConstantValue.MOBILE_SAFE_PSD, "");
                     if (Md5Util.encoder(confirm_psd).equals(psd)) {
                         Intent intent = new Intent(mContext, SetupOverActivity.class);
                         startActivity(intent);
@@ -153,13 +153,13 @@ public class HomeActivity extends Activity {
                     ToastUtil.show(mContext, "请输入密码");
                 } else {
                     if (psd.equals(confirm_psd)) {
-                        SpUtil.putString(mContext, ConstantValue.MOBILE_SDAFE_PSD, psd);
+                        SpUtil.putString(mContext, ConstantValue.MOBILE_SAFE_PSD, psd);
 //                        Intent intent = new Intent(mContext, TestActivity.class);
                         Intent intent = new Intent(mContext, SetupOverActivity.class);
                         startActivity(intent);
                         //跳转之后应该关闭对话框
                         dialog.dismiss();
-                        SpUtil.putString(mContext,ConstantValue.MOBILE_SDAFE_PSD, Md5Util.encoder(confirm_psd));
+                        SpUtil.putString(mContext,ConstantValue.MOBILE_SAFE_PSD, Md5Util.encoder(confirm_psd));
 
                     } else {
                         ToastUtil.show(mContext, "两次密码不一致");

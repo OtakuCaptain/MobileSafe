@@ -9,6 +9,10 @@ public class ConstantValue {
     /**
      * 确认密码的key值
      */
-    public static final String MOBILE_SDAFE_PSD = "mobile_sdafe_psd";
+    public static final String MOBILE_SAFE_PSD = "mobile_safe_psd";
+    /**
+     * 是否设置完成导航界面的key值
+     */
     public static final String SETUP_OVER = "setup_over";
+
 }
