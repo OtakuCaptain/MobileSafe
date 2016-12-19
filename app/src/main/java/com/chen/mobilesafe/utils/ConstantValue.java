@@ -15,4 +15,8 @@ public class ConstantValue {
      */
     public static final String SETUP_OVER = "setup_over";
 
+    /**
+     * sim卡绑定序列号
+     */
+    public static final String SIM_NUMBER = "sim_number";
 }

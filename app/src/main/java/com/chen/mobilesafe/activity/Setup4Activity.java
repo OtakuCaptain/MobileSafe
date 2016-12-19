@@ -11,9 +11,7 @@ import com.chen.mobilesafe.utils.SpUtil;
 
 import java.lang.reflect.AccessibleObject;
 
-/**
- * Created by chen on 2016-12-05.
- */
+
 public class Setup4Activity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +31,6 @@ public class Setup4Activity extends Activity{
         startActivity(intent);
         finish();
 
-        SpUtil.putBoolean(this, ConstantValue.SETUP_OVER,true);
+//        SpUtil.putBoolean(this, ConstantValue.SETUP_OVER,true);
     }
 }

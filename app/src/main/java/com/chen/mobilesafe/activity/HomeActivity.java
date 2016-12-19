@@ -1,10 +1,15 @@
 package com.chen.mobilesafe.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +41,38 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         mContext = this;
 
-        //初始化UI
-        initUI();
-        //初始化数据
-        initData();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+        } else {
+            //初始化UI
+            initUI();
+            //初始化数据
+            initData();
+        }
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //初始化UI
+                    initUI();
+                    //初始化数据
+                    initData();
+                } else {
+                    ToastUtil.show(getApplicationContext(), "没有此权限，将无法继续使用本软件的某些功能");
+                    //初始化UI
+                    initUI();
+                    //初始化数据
+                    initData();
+                }
+                break;
+        }
+    }
+
 
     private void initData() {
         mTitleStr = new String[]{
@@ -133,7 +165,7 @@ public class HomeActivity extends Activity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final AlertDialog dialog = builder.create();
-        final View view= View.inflate(mContext, R.layout.dialog_set_psd, null);
+        final View view = View.inflate(mContext, R.layout.dialog_set_psd, null);
         dialog.setView(view);
         dialog.show();
 //findViewById因为是view页面，应该用view.findViewById
@@ -159,7 +191,7 @@ public class HomeActivity extends Activity {
                         startActivity(intent);
                         //跳转之后应该关闭对话框
                         dialog.dismiss();
-                        SpUtil.putString(mContext,ConstantValue.MOBILE_SAFE_PSD, Md5Util.encoder(confirm_psd));
+                        SpUtil.putString(mContext, ConstantValue.MOBILE_SAFE_PSD, Md5Util.encoder(confirm_psd));
 
                     } else {
                         ToastUtil.show(mContext, "两次密码不一致");
