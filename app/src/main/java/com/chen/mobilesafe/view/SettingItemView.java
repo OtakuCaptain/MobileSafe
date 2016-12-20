@@ -13,7 +13,7 @@ import com.chen.activity.R;
 
 public class SettingItemView extends RelativeLayout {
 
-    protected static final String tag = "SettingItemView";
+    protected static final String tag = "hehe";
     private static final String NAMESPACE = "http://schemas.android.com/apk/res-auto";
     private CheckBox cb_box;
     private TextView tv_des;

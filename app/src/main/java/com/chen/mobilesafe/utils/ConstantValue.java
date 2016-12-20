@@ -1,6 +1,8 @@
 package com.chen.mobilesafe.utils;
 
 
+import android.Manifest;
+
 public class ConstantValue {
     /**
      * 是否开启更新的key值
@@ -19,4 +21,6 @@ public class ConstantValue {
      * sim卡绑定序列号
      */
     public static final String SIM_NUMBER = "sim_number";
+
+
 }

@@ -43,7 +43,5 @@ captures/
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
-libs/
 .idea/modules.xml
 .idea/runConfigurations.xml
-xutils/

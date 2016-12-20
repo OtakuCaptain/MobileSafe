@@ -41,38 +41,12 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         mContext = this;
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        //初始化UI
+        initUI();
+        //初始化数据
+        initData();
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-        } else {
-            //初始化UI
-            initUI();
-            //初始化数据
-            initData();
-        }
     }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //初始化UI
-                    initUI();
-                    //初始化数据
-                    initData();
-                } else {
-                    ToastUtil.show(getApplicationContext(), "没有此权限，将无法继续使用本软件的某些功能");
-                    //初始化UI
-                    initUI();
-                    //初始化数据
-                    initData();
-                }
-                break;
-        }
-    }
-
 
     private void initData() {
         mTitleStr = new String[]{
