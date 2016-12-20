@@ -59,6 +59,7 @@ public class SettingItemView extends RelativeLayout {
     }
 
     public boolean isCheck() {
+        //由checkBox的选中结果，决定当前条目是否开启
         return cb_box.isChecked();
     }
 

@@ -66,4 +66,15 @@ public class SpUtil {
         return sp.getString(key,defValue);
     }
 
+    /**
+     * 移除节点条目
+     * @param context 上下文
+     * @param key  节点
+     */
+    public static void remove(Context context, String key) {
+        if (sp==null) {
+            sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        }
+        sp.edit().remove(key).apply();//移除节点所对应条目
+    }
 }
