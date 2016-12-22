@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,10 +33,11 @@ public class ContactListActivity extends Activity {
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            MyAdapter myAdapter = new MyAdapter();
+            myAdapter = new MyAdapter();
             lv_contact.setAdapter(myAdapter);
         }
     };
+    private MyAdapter myAdapter;
 
 
     @Override
@@ -57,9 +59,10 @@ public class ContactListActivity extends Activity {
                 //查询系统联系人数据库，需要权限
                 Cursor cursor = contentResolver.query(
                         Uri.parse("content://com.android.contacts/raw_contacts"),
-                        new String[]{"contact_id"},
+                        new String[]{"_id"},
                         null, null, null);
                 contactList.clear();
+                assert cursor != null;
                 while (cursor.moveToNext()) {
                     String _id = cursor.getString(0);
                     Log.i("hehe", "id=" + _id);
@@ -68,16 +71,21 @@ public class ContactListActivity extends Activity {
                             new String[]{"data1", "mimetype"},
                             "raw_contact_id= ?", new String[]{_id}, null);
                     HashMap<String, String> hashMap = new HashMap<>();
+                    assert indexCursor != null;
                     while (indexCursor.moveToNext()) {
                         String data = indexCursor.getString(0);
                         String type = indexCursor.getString(1);
                         Log.i("hehe", "data:  " + data);
                         Log.i("hehe", "mimetype:   " + type);
-                            if (type.equals("vnd.android.cursor.item/phone_v2")) {
+                        if (type.equals("vnd.android.cursor.item/phone_v2")) {
+                            if (!TextUtils.isEmpty(data)) {
                                 hashMap.put("phone", data);
-                            } else if (type.equals("vnd.android.cursor.item/name")) {
+                            }
+                        } else if (type.equals("vnd.android.cursor.item/name")) {
+                            if (!TextUtils.isEmpty(data)) {
                                 hashMap.put("name", data);
                             }
+                        }
                     }
                     indexCursor.close();
                     contactList.add(hashMap);
@@ -94,6 +102,19 @@ public class ContactListActivity extends Activity {
 
     private void initUI() {
         lv_contact = (ListView) findViewById(R.id.lv_contact);
+        lv_contact.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (myAdapter != null) {
+                    HashMap<String, String> hashMap = myAdapter.getItem(position);
+                    String phone = hashMap.get("phone");
+                    Intent intent = new Intent();
+                    intent.putExtra("phone", phone);
+                    setResult(0, intent);
+                    finish();
+                }
+            }
+        });
     }
 
 
@@ -115,7 +136,7 @@ public class ContactListActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            @SuppressLint("ViewHolder") View view = View.inflate(getApplicationContext(), R.layout.listview_contact_item, null);
+            View view = View.inflate(getApplicationContext(), R.layout.listview_contact_item, null);
             TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
             TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
             tv_name.setText(getItem(position).get("name"));
