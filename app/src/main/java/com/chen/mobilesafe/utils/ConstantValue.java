@@ -23,4 +23,6 @@ public class ConstantValue {
     public static final String SIM_NUMBER = "sim_number";
 
 
+    public static final String CONTACT_PHONE_NUMBER = "vnd.android.cursor.item/phone_v2";
+    public static final String CONTACT_NAME = "vnd.android.cursor.item/name";
 }

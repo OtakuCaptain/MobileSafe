@@ -47,10 +47,9 @@ public class Setup2Activity extends Activity {
             @Override
             public void onClick(View v) {
                 String[] strings = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE};
-                if (ContextCompat.checkSelfPermission(Setup2Activity.this, Manifest.permission.READ_CONTACTS)
+                if (ContextCompat.checkSelfPermission(Setup2Activity.this,strings[1])
                         != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(Setup2Activity.this,
-                            new String[]{Manifest.permission.READ_CONTACTS}, 1);
+                    ActivityCompat.requestPermissions(Setup2Activity.this, strings, 1);
                 } else {
                     //获取原有状态
                     boolean isCheck = siv_sim_bound.isCheck();
@@ -73,13 +72,13 @@ public class Setup2Activity extends Activity {
 
     public void nextPage(View v) {
         String serialNumber = SpUtil.getString(this, ConstantValue.SIM_NUMBER, "");
-        if (!TextUtils.isEmpty(serialNumber)) {
-            Intent intent = new Intent(this, Setup3Activity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            ToastUtil.show(this, "请绑定sim卡");
-        }
+//        if (!TextUtils.isEmpty(serialNumber)) {
+        Intent intent = new Intent(this, Setup3Activity.class);
+        startActivity(intent);
+        finish();
+//        } else {
+//            ToastUtil.show(this, "请绑定sim卡");
+//        }
     }
 
     public void prePage(View v) {

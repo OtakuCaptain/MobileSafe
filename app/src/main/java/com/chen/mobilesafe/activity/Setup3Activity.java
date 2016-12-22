@@ -3,21 +3,21 @@ package com.chen.mobilesafe.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.chen.activity.R;
-import com.chen.mobilesafe.utils.ToastUtil;
 
-import static com.chen.mobilesafe.utils.ConstantValue.QUEST_CODE_CONTACTS;
-import static com.chen.mobilesafe.utils.ConstantValue.QUEST_CODE_SEND_SMS;
 
 /**
  * Created by chen on 2016-12-05.
  */
-public class Setup3Activity extends BaseActivity {
+public class Setup3Activity extends Activity {
 
     private EditText et_phone_number;
     private Button bt_select_number;
@@ -35,11 +35,13 @@ public class Setup3Activity extends BaseActivity {
         bt_select_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (isPermissionGranted(Manifest.permission.READ_CONTACTS,QUEST_CODE_CONTACTS)){
-                Intent intent = new Intent(getApplicationContext(), ContactListActivity.class);
-                startActivityForResult(intent, 0);}else {
-
+                if (ContextCompat.checkSelfPermission(Setup3Activity.this, Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(Setup3Activity.this,
+                            new String[]{Manifest.permission.READ_CONTACTS}, 1);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), ContactListActivity.class);
+                    startActivityForResult(intent, 100);
                 }
             }
         });
@@ -47,6 +49,9 @@ public class Setup3Activity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==100){
+
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
